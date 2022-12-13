@@ -130,8 +130,10 @@ def chek_kit(k):
     win = None
     if kit.find('OOO') >= 0:
         win = 2
-    if kit.find('XXX') >= 0:
-        win = 1
+    if kit.find('XXX') >= 0 and benefit == 0:
+        win = 3
+    if kit.find('XXX') >= 0 and benefit == 1:
+        win = 1 
     return win
 
 
@@ -140,6 +142,7 @@ print(f'Правила: 1. Размер поля - высота и ширина 
       f'            первая - номер строки, вторая - столбца\n'
       f'         3. Первый ход выполняет "Х"\n'
       f'             УДАЧИ !!!')
+
 N = input('Ведите размер поля (от 3 до 9): ')
 while not (N.isdigit() and (3 <= int(N) <= 9)):
     N = input('Повторите ввод размера поля (от 3 до 9): ')
@@ -149,30 +152,37 @@ field = nums_field(keys)
 
 button = None
 count = 0
-
+benefit = 0
 while button != 0:
     show_field(field)
     main_line = main_field(field)
     winner = victory()
-    
-    if winner > 0:
-        if winner == 1:
-            favorite = 'Игра окончена!! Победил, "X". Поздравляю!!'
-        elif winner == 2:
-            favorite = 'Игра окончена!! Победил, "0". Поздравляю!!'
-        print(favorite)
-        button = 0
    
+    if winner > 0:
+        if winner == 3:
+            benefit = 1
+            print('Внимание, у "O" последний ход...')
+            mark = 'O'
+            count += 1
+        elif winner == 2 and benefit == 1:
+            print('Игра окончена!! Ничья!!')
+            button = 0
+        elif winner == 1:
+            favorite = 'Игра окончена!! Победил, "X". Поздравляю!!'
+            print(favorite)
+            button = 0
+        elif winner == 2:
+            favorite = 'Игра окончена!! Победил, "O". Поздравляю!!'
+            print(favorite)
+            button = 0
+
     button = int(step())
-    if count % 2:
-        mark = 'O'
-    else:
-        mark = 'X'
+    if benefit == 0:
+        if count % 2:
+            mark = 'O'
+        else:
+            mark = 'X'
     count += 1
-        
     field[button] = mark
 
     
- 
-
-
