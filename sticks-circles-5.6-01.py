@@ -103,10 +103,10 @@ def diaginal_1(d1):
     return chek_kit(line)
 
 def diaginal_2(d2):
-    for i in range(len(main_line)-2, 0, -1):
+    for i in range(len(d2)-2, 0, -1):
         line = []
         while i >= 0:
-            line.append(main_line[i])
+            line.append(d2[i])
             i = i - size +2
         if chek_kit(line):
             break
@@ -128,19 +128,21 @@ def main_field(f):
 def chek_kit(k):
     kit = (''.join(k)).strip(' ')
     win = None
-    if kit.find('OOO') >= 0:
+    if kit.find('O'*R) >= 0:
         win = 2
-    if kit.find('XXX') >= 0 and benefit == 0:
+    if kit.find('X'*R) >= 0 and benefit == 0:
         win = 3
-    if kit.find('XXX') >= 0 and benefit == 1:
+    if kit.find('X'*R) >= 0 and benefit == 1:
         win = 1 
     return win
 
 
 print(f'Правила: 1. Размер поля - высота и ширина в клетках.\n'
       f'         2. Для хода нужно без пробела вводить две цифры:\n'
-      f'            первая - номер строки, вторая - столбца\n'
-      f'         3. Первый ход выполняет "Х"\n'
+      f'            первая - номер строки, вторая - столбца.\n'
+      f'         3. Если размер поля 3 или 4, игра идёт "до трёх",\n'
+      f'            если 5 или 6, то "до 4", если более - "до 5".\n'
+      f'         4. Первый ход выполняет "Х"\n'
       f'             УДАЧИ !!!')
 
 N = input('Ведите размер поля (от 3 до 9): ')
@@ -148,8 +150,13 @@ while not (N.isdigit() and (3 <= int(N) <= 9)):
     N = input('Повторите ввод размера поля (от 3 до 9): ')
 N = int(N)
 size = N + 1
+if N == 3 or N == 4:
+    R = 3
+elif N == 5 or N == 6:
+    R = 4
+else:
+    R = 5
 field = nums_field(keys)
-
 button = None
 count = 0
 benefit = 0
