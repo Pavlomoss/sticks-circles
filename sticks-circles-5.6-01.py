@@ -159,7 +159,9 @@ def main_field(f):
     for i in range(1, size):
         i = i*10
         field.pop(i)
-    line = list(field.values())
+    fild_tuple = sorted(field.items(), key = lambda x: x[0])
+    sort_field = dict(fild_tuple)
+    line = list(sort_field.values())
     return line
 
 
@@ -173,15 +175,16 @@ def chek_kit(k):
     return win
 
 def chek_winner():
-    CW = victory(main_line)
-    if CW == 2:
-        winner = 2
-    if CW == 1 and benefit == 0:
-        winner = 3
-    if CW == 1 and benefit == 1:
-        winner = 1
-    winner = CW
-    return winner
+    cw = victory(main_line)
+    if cw == 1 and benefit == 1:
+        wr = 1
+    elif cw == 1 and benefit == 0:
+        wr = 3
+    elif cw == 2:
+        wr = 2
+    else:
+        wr = cw
+    return wr
 
 
 
@@ -220,16 +223,15 @@ while button != 0:
             print('Внимание, у "O" последний ход...')
             mark = 'O'
             count += 1
-        elif winner == 2 and benefit == 1:
+        if winner == 2 and benefit == 1:
             print('Игра окончена!! Ничья!!')
             button = 0
-        elif winner == 1:
+        elif winner == 1 and benefit == 1:
             favorite = 'Игра окончена!! Победил, "X". Поздравляю!!'
             print(favorite)
             button = 0
         elif winner == 2:
             favorite = 'Игра окончена!! Победил, "O". Поздравляю!!'
-            print(favorite)
             button = 0
 
     button = int(step())
@@ -240,5 +242,9 @@ while button != 0:
             mark = 'X'
     count += 1
     field[button] = mark
+    
 
     
+ 
+
+
