@@ -59,15 +59,19 @@ def check_busy(button):
         return False
     
 
-def victory():
-    if horizont(main_line):
-        win = horizont(main_line)
-    elif vertikal(main_line):
-        win = vertikal(main_line)
-    elif diaginal_1(main_line):
-        win = diaginal_1(main_line)
-    elif diaginal_2(main_line):
-        win = diaginal_2(main_line)
+def victory(ML):
+    if horizont(ML):
+        win = horizont(ML)
+    elif vertikal(ML):
+        win = vertikal(ML)
+    elif diaginal_1(ML):
+        win = diaginal_2(ML)
+    elif diaginal_2(ML):
+        win = diaginal_2(ML)
+    elif diaginal_3(ML):
+        win = diaginal_3(ML)     
+    elif diaginal_4(ML):
+        win = diaginal_4(ML)
     else:
         win = 0
     return win
@@ -93,21 +97,55 @@ def vertikal(vL):
     return chek_kit(line)
 
 def diaginal_1(d1):
-    for i in range(len(d1)):
+    for i in range(1, N-1):
+        var = 0
         line = []
-        while i < len(d1):
-            line.append(d1[i])
-            i += size
+        j = i        
+        while var <= N-1-i:
+            line.append(d1[j])
+            var += 1
+            j += N+1
+        if chek_kit(line):
+            break
+    return chek_kit(line)
+
+def diaginal_3(d3):
+    LL = len(d3)
+    for i in range(LL-1, LL-N, -1):
+        var = 0
+        line = []
+        j = i        
+        while var <= N-LL+i:
+            line.append(d3[j])
+            var += 1
+            j = j - N - 1
         if chek_kit(line):
             break
     return chek_kit(line)
 
 def diaginal_2(d2):
-    for i in range(len(d2)-2, 0, -1):
+    for i in range(1, N-1):
+        var = 0
         line = []
-        while i >= 0:
-            line.append(d2[i])
-            i = i - size +2
+        j = i        
+        while var <= i:
+            line.append(d2[j])
+            var += 1
+            j += N - 1
+        if chek_kit(line):
+            break
+    return chek_kit(line)
+
+def diaginal_4(d4):
+    LL = len(d4)
+    for i in range(LL-2, LL-N-1, -1):
+        var = 0
+        line = []
+        j = i        
+        while var <= LL-1-i:
+            line.append(d4[j])
+            var += 1
+            j = j - N + 1
         if chek_kit(line):
             break
     return chek_kit(line)
@@ -130,11 +168,22 @@ def chek_kit(k):
     win = None
     if kit.find('O'*R) >= 0:
         win = 2
-    if kit.find('X'*R) >= 0 and benefit == 0:
-        win = 3
-    if kit.find('X'*R) >= 0 and benefit == 1:
+    if kit.find('X'*R) >= 0:
         win = 1 
     return win
+
+def chek_winner():
+    CW = victory(main_line)
+    if CW == 2:
+        winner = 2
+    if CW == 1 and benefit == 0:
+        winner = 3
+    if CW == 1 and benefit == 1:
+        winner = 1
+    winner = CW
+    return winner
+
+
 
 
 print(f'Правила: 1. Размер поля - высота и ширина в клетках.\n'
@@ -163,7 +212,7 @@ benefit = 0
 while button != 0:
     show_field(field)
     main_line = main_field(field)
-    winner = victory()
+    winner = chek_winner()
    
     if winner > 0:
         if winner == 3:
