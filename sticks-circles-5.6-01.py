@@ -65,7 +65,7 @@ def victory(ML):
     elif vertikal(ML):
         win = vertikal(ML)
     elif diaginal_1(ML):
-        win = diaginal_2(ML)
+        win = diaginal_1(ML)
     elif diaginal_2(ML):
         win = diaginal_2(ML)
     elif diaginal_3(ML):
