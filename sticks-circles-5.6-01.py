@@ -59,97 +59,65 @@ def check_busy(button):
         return False
     
 
-def victory(ML):
-    if horizont(ML):
-        win = horizont(ML)
-    elif vertikal(ML):
-        win = vertikal(ML)
-    elif diaginal_1(ML):
-        win = diaginal_1(ML)
-    elif diaginal_2(ML):
-        win = diaginal_2(ML)
-    elif diaginal_3(ML):
-        win = diaginal_3(ML)     
-    elif diaginal_4(ML):
-        win = diaginal_4(ML)
-    else:
-        win = 0
-    return win
-
-def horizont(hL):
+def sum_lines(mL):
+    sumL = []
+    LL = len(mL)
+    
     for j  in range (size-1):
         line = []
         for i in range (size-1):
-            line.append(hL[i+j*(size-1)])
-        if chek_kit(line):
-            break
-        j += 1
-    return chek_kit(line)
-
-def vertikal(vL):
+            line.append(mL[i+j*(size-1)])
+        kit = (''.join(line)).strip(' ')
+        sumL.append(kit)
     for j  in range (size-1):
         line = []
         for i in range (size-1):
-            line.append(vL[i*(size-1)+j])
-        if chek_kit(line):
-            break
-        j += 1
-    return chek_kit(line)
-
-def diaginal_1(d1):
+            line.append(mL[i*(size-1)+j])
+        kit = (''.join(line)).strip(' ')    
+        sumL.append(kit)
     for i in range(1, N-1):
         var = 0
         line = []
         j = i        
         while var <= N-1-i:
-            line.append(d1[j])
+            line.append(mL[j])
             var += 1
             j += N+1
-        if chek_kit(line):
-            break
-    return chek_kit(line)
-
-def diaginal_3(d3):
-    LL = len(d3)
-    for i in range(LL-1, LL-N, -1):
-        var = 0
-        line = []
-        j = i        
-        while var <= N-LL+i:
-            line.append(d3[j])
-            var += 1
-            j = j - N - 1
-        if chek_kit(line):
-            break
-    return chek_kit(line)
-
-def diaginal_2(d2):
+        kit = (''.join(line)).strip(' ')    
+        sumL.append(kit)
     for i in range(1, N-1):
         var = 0
         line = []
         j = i        
         while var <= i:
-            line.append(d2[j])
+            line.append(mL[j])
             var += 1
             j += N - 1
-        if chek_kit(line):
-            break
-    return chek_kit(line)
-
-def diaginal_4(d4):
-    LL = len(d4)
+        kit = (''.join(line)).strip(' ')    
+        sumL.append(kit)
+    for i in range(LL-1, LL-N, -1):
+        var = 0
+        line = []
+        j = i        
+        while var <= N-LL+i:
+            line.append(mL[j])
+            var += 1
+            j = j - N - 1
+        kit = (''.join(line)).strip(' ')    
+        sumL.append(kit)
     for i in range(LL-2, LL-N-1, -1):
         var = 0
         line = []
         j = i        
         while var <= LL-1-i:
-            line.append(d4[j])
+            line.append(mL[j])
             var += 1
             j = j - N + 1
-        if chek_kit(line):
-            break
-    return chek_kit(line)
+        kit = (''.join(line)).strip(' ')    
+        sumL.append(kit)
 
+    return sumL
+    
 
 def main_field(f):
     field = f.copy()
@@ -165,28 +133,25 @@ def main_field(f):
     return line
 
 
-def chek_kit(k):
-    kit = (''.join(k)).strip(' ')
+def chek_winner(kL, B):
     win = None
-    if kit.find('O'*R) >= 0:
-        win = 2
-    if kit.find('X'*R) >= 0:
-        win = 1 
+    winO = winX = 'empty'
+    for part in kL:
+        kit = (''.join(part)).strip(' ')
+        if kit.find('O'*R) >= 0:
+          winO = 'fuLL'
+        elif kit.find('X'*R) >= 0:
+               winX = 'fuLL'
+        if winO == 'fuLL' and winX == 'fuLL':
+          win = 'Ничья'
+        elif winO == 'fuLL' and winX == 'empty':
+          win = 'Победил "O"'
+        elif winO == 'empty' and winX == 'fuLL' and benefit:
+           win = 'Победил "X"'
+        elif winO == 'empty' and winX == 'fuLL' and not benefit:
+           win = 'Attantion'
     return win
-
-def chek_winner():
-    cw = victory(main_line)
-    if cw == 1 and benefit == 1:
-        wr = 1
-    elif cw == 1 and benefit == 0:
-        wr = 3
-    elif cw == 2:
-        wr = 2
-    else:
-        wr = cw
-    return wr
-
-
+  
 
 
 print(f'Правила: 1. Размер поля - высота и ширина в клетках.\n'
@@ -211,29 +176,26 @@ else:
 field = nums_field(keys)
 button = None
 count = 0
-benefit = 0
+benefit = False
 while button != 0:
     show_field(field)
     main_line = main_field(field)
-    winner = chek_winner()
+    chek_kit = sum_lines(main_line)
+    winner = chek_winner(chek_kit, benefit)
    
-    if winner > 0:
-        if winner == 3:
-            benefit = 1
+    if winner:
+        if winner == 'Attantion':
+            benefit = True
             print('Внимание, у "O" последний ход...')
             mark = 'O'
             count += 1
-        if winner == 2 and benefit == 1:
-            print('Игра окончена!! Ничья!!')
+        if winner == 'Ничья':
+            print('Игра окончена!!', winner, '!!')
             button = 0
-        elif winner == 1 and benefit == 1:
-            favorite = 'Игра окончена!! Победил, "X". Поздравляю!!'
-            print(favorite)
+        elif winner == 'Победил "X"' or winner == 'Победил "O"':
+            print('Игра окончена!!', winner, '. Поздравляю!!')
             button = 0
-        elif winner == 2:
-            favorite = 'Игра окончена!! Победил, "O". Поздравляю!!'
-            button = 0
-
+        
     button = int(step())
     if benefit == 0:
         if count % 2:
@@ -242,9 +204,6 @@ while button != 0:
             mark = 'X'
     count += 1
     field[button] = mark
-    
 
     
- 
-
-
+    
