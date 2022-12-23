@@ -146,8 +146,8 @@ def chek_winner(kL, B):
 print(f'Правила: 1. Размер поля - высота и ширина в клетках.\n'
       f'         2. Для хода нужно без пробела вводить две цифры:\n'
       f'            первая - номер строки, вторая - столбца.\n'
-      f'         3. Если размер поля 3 или 4, игра идёт "до трёх",\n'
-      f'            если 5 или 6, то "до 4", если более - "до 5".\n'
+      f'         3. Если размер поля от 3 до 5, игра идёт "до трёх",\n'
+      f'            если 6 и более, то "до 4".\n'
       f'         4. Учитывается горинтальная, вертикальная и наклонная\n'
       f'            расстановка символов\n'
       f'         5. Первый ход выполняет "Х"\n'
@@ -158,12 +158,10 @@ while not (N.isdigit() and (3 <= int(N) <= 9)):
     N = input('Повторите ввод размера поля (от 3 до 9): ')
 N = int(N)
 size = N + 1
-if N == 3 or N == 4:
+if N <= 5:
     R = 3
-elif N == 5 or N == 6:
-    R = 4
 else:
-    R = 5
+    R = 4
 field = nums_field()
 button = None
 count = 0
@@ -174,6 +172,7 @@ while button != 0:
     chek_kit = sum_lines(main_line)
     winner = chek_winner(chek_kit, benefit)
 
+    
     if winner:
         if winner == 'Attantion':
             benefit = True
@@ -182,12 +181,13 @@ while button != 0:
             count += 1
         if winner == 'Ничья':
             print('Игра окончена!!', winner, '!!')
-            button = 0
+            break
         elif winner == 'Победил "X"' or winner == 'Победил "O"':
             print('Игра окончена!!', winner, '. Поздравляю!!')
-            button = 0
+            break
 
     button = int(step())
+
     if benefit == 0:
         if count % 2:
             mark = 'O'
